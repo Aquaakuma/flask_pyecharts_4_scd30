@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Awesome-pyecharts</title>
+    <script src="https://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+
+</head>
+<body>
+    <div id="bar" style="width:1200px; height:800px;"></div>
+    <script>
+        var chart = echarts.init(document.getElementById('bar'), 'macarons', {renderer: 'canvas'});
+        $(
+            function () {
+                fetchData(chart);
+                setInterval(getDynamicData, 10000);
+            }
+        );
+
+        function fetchData() {
+            $.ajax({
+                type: "GET",
+                url: "Chart",
+                dataType: "json",
+                success: function (result) {
+                    chart.setOption(result);
+                }
+            });
+        }
+
+
+        function getDynamicData() {
+            $.ajax({
+                type: "GET",
+                url: "DynamicData",
+                dataType: "json",
+                success: function (result) {
+                
+                    chart.setOption({
+                        series: [{
+                            name: "CO2浓度",
+                            data: result.CO2
+                        },
+                        {
+                            name: "温度",
+                            data: result.temp
+                        },
+                        {
+                            name: "湿度",
+                            data: result.rh
+                        }
+                        ],
+                        xAxis: [
+                        {
+                            data: result.time
+                        },
+                        {
+                            data: result.time
+                        },
+                        {
+                            data: result.time
+                        }
+                        ]
+                    });
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
